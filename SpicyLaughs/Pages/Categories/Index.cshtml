@@ -1,0 +1,59 @@
+﻿@page
+@model SpiceyLaughs.Pages.Categories.IndexModel
+@{
+    ViewData["Title"] = "List of Cuisine";
+}
+
+<div class="row align-Models-center">
+    <div class="col mx-5">
+        <table class="table">
+            <thead>
+                <tr class="text-center h4">
+                    <th>
+                        @Html.DisplayNameFor(model => model.Categories.ElementAt(0).ImageURL)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Categories.ElementAt(0).Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Categories.ElementAt(0).Description)
+                    </th>
+                    
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                    {
+                        <th>Actions</th>
+                    } 
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Categories)
+                {
+                    <tr>
+                        <td class="align-middle text-center p-3 col-12 col-md-6 col-lg-2">
+                            <img class="rounded-circle" src="@item.ImageURL" alt="@item.Title" style="max-width:150px">
+                        </td>
+                        <td class="align-middle text-center col-12 col-md-6 col-lg-2">
+                            <label asp-for="@item.Title"><b></b>@item.Title</label>
+                        </td>
+                        <td class="align-middle text-center col-12 col-md-6 col-lg-5">
+                            <label asp-for="@item.Description">@item.Description</label>
+                        </td>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                        {
+                        <td class="align-middle text-center col-12 col-md-6 col-lg-3">
+                            <a asp-page="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary"><i class="bi bi-pencil-square"></i> Edit</a> |
+                            <a asp-page="Details" asp-route-id="@item.Id" class="btn btn-outline-info"><i class="bi bi-eye"></i> Details</a> |
+                            <a asp-page="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="bi bi-trash"></i> Delete</a>
+                        </td>
+                        }
+                            
+                        
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@await Html.PartialAsync("_AddNewIconPartial", "create")

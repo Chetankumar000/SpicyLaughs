@@ -1,0 +1,118 @@
+﻿@page
+@model SpiceyLaughs.Pages.Orders.IndexModel
+@{
+    ViewData["Title"] = "Shopping Cart Summary";
+}
+
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <div class="text-center">
+            <h2> Your Shopping Cart Summary</h2>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Selected Amount</th>
+                    <th>Dish</th>
+                    <th>Price</th>
+                    <th>SubTotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ShoppingCart.ShoppingCartItems)
+                {
+                    <tr>
+                        <td class="align-middle">@item.Amount</td>
+                        <td class="align-middle">@item.Dish.Title</td>
+                        <td class="align-middle">&#8377;@item.Dish.Price</td>
+                        <td class="align-middle">&#8377;@(item.Amount * item.Dish.Price)</td>
+                        <td class="align-middle">
+                            <a class="text-center" asp-page="RemoveItemFromShoppingCart" asp-route-id="@item.Dish.Id">
+                                <i class="bi bi-cart-dash text-danger"></i>
+                            </a> |
+                            <a class="text-center" asp-page="AddItemToShoppingCart" asp-route-id="@item.Dish.Id">
+                                <i class="bi bi-cart-plus text-success"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"></td>
+                    <td><b>Total :</b></td>
+                    <td>&#8377;@Model.ShoppingCartTotal.ToString("N2") </td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="text-end">
+            <div class="btn-group">
+                <a class="btn btn-outline-success" asp-page="/Dishes/Index">Add More Items</a>
+                <span style="padding:5px"></span>
+
+                <a class="btn btn-outline-primary pe-2" asp-page="/Orders/Complete" asp-route-PaymentType="1">Complete Order(COD)</a>
+                <span style="padding:5px"></span>
+
+                <div id="paypal-btn">
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+    <script>
+
+        let _total = @Html.Raw(Model.ShoppingCartTotal);
+
+        paypal.Button.render({
+            //Configure environment
+            env: 'sandbox',
+            client: {
+                sandbox: 'AcY8EZuJisn_e42vb6JOosvj6w0zA_Kka3D6FlWo7Ni9hx6OSJmdAA-HXhivdofkVfdbYthw_zhLcnx5'
+            },
+
+            //Customize button
+            locale: 'en_US',
+            style: {
+                size: 'small',
+                color: 'gold',
+                shape: 'pill'
+            },
+            commit: true,
+
+            //Set up a payment
+            payment: function (data, actions) {
+                return actions.payment.create({
+                    transactions: [{
+                        amount: {
+                            total: _total,
+                            currency: 'USD'
+                        }
+                    }]
+                });
+            },
+
+            //Execute the payment
+            onAuthorize: function (data, actions) {
+                return actions.payment.execute().then(function () {
+                    var url = '@Url.Page("/Orders/Complete", new { })';
+                    window.location.href = url;
+                });
+            }
+
+        }, '#paypal-btn')
+    </script>
+}
+

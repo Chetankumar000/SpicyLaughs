@@ -1,0 +1,36 @@
+
+
+/*@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}*/
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+main {
+    flex: 1;
+}
+
+td {
+    font-size: 18px;
+}
+
+footer {
+    position: relative;
+    width: 100%;
+    bottom: 0;
+    padding: 10px 0;
+    margin: 0;
+    background-color: gainsboro;
+    text-align: center;
+}
+
+    footer p {
+        margin: 0;
+    }
+

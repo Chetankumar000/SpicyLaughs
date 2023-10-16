@@ -1,0 +1,137 @@
+﻿@page
+@model SpiceyLaughs.Pages.Orders.ListOrdersModel
+@{
+}
+
+<div class="row">
+    <div class="col-md-10 offset-1">
+        <p>
+            <h3>List of All your Orders</h3>
+            <h5 class="float-end">Total Orders : @Model.OrderCount</h5>
+            <h5 class="float-end pe-4">Total Sales: &#8377;@Model.TotalSales</h5>
+            <h5 class="float-end pe-4">Total Sales(Last 24)</>: &#8377;@Model.Total24Sales</h5>
+            <h5 class="float-end pe-4">Total Orders(Last 24): @Model.Last24Orders</h5>
+            <form>
+            <div class="form-group p-2 col-md-2">
+                <label asp-for="Status" class="control-label pb-1"><b>Select Status</b></label>
+                <div class="input-group">
+                    <select asp-for="Status" class="form-control custom-select">
+                        <option value="@null" default="" selected="">All Types</option>
+                            <option value="Pending" default="" >Pending</option>
+                            <option value="Accepted" default="">Accepted</option>
+                            <option value="Declined" default="">Declined</option>
+                    </select>
+                </div>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+                <div class="form-group p-2">
+                    <button type="submit" class="btn btn-success">Go</button>
+                    <a class="btn btn-secondary" asp-page="/Orders/ListOrders">Show All</a>
+                </div>
+            </form> 
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="align-middle"><div>OrderId</div></th>
+                    <th class="align-middle"><div class="text-center">Items</div></th>
+                    <th class="align-middle">Order DateTime</th>
+                    <th class="align-middle">Payment</th>
+                    <th class="align-middle">Status</th>
+                     @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                    {
+                        <th class="align-middle">Action</th>
+                    }
+                    <th class="align-middle">Total</th>
+                  @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                    { 
+                    <th class="align-middle">User</th>
+                     } 
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model.Orders)
+                {
+                    <tr>
+                        <td class="align-middle">@order.Id</td>
+                        <td class="align-middle">
+                            <ul style="list-style-type:none">
+                                @foreach (var item in order.OrderItems)
+                                {
+                                    <li>
+                                        <div class="alert alert-success col-md-10" role="alert">
+                                            <span class="badge bg-success">@item.Amount</span>[&#8377;@item.Price]-@item.Dish.Title
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                        <td class="align-middle">
+                            @order.DateTime
+                        </td>
+                        <td class="align-middle">
+                            @if (order.Payment == "COD")
+                            {
+                            <span class="badge bg-primary text-white">@order.Payment</span>
+                            }
+                            else
+                            {
+                            <span class="badge bg-secondary text-white">@order.Payment</span>
+                            }
+
+                        </td>
+                        <td class="align-middle">
+                            @if(order.Status == "Pending")
+                            {
+                                <span class="badge bg-warning text-white">@order.Status</span>
+                            }
+                            else if (order.Status == "Accepted")
+                            {
+                                <span class="badge bg-success text-white">@order.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger text-white">@order.Status</span>
+                            }
+
+                                
+                 
+                             
+                        </td>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                        {
+                            <td class="align-middle">
+                                <form method="post" asp-page="/Orders/OrderStatus" asp-route-id="@order.Id">
+                                    <input hidden value="" name="Status" id="Status_@order.Id" />
+                                    <button class="btn btn-outline-success" value="Accept" id="AcceptButton_@order.Id" type="submit"><i class="bi bi-hand-thumbs-up"></i>Accept</button> |
+                                    <button class="btn btn-outline-danger" value="Decline" id="DeclineButton_@order.Id" type="submit"><i class="bi bi-hand-thumbs-down"></i>Decline</button>
+                                </form>
+                            </td>
+                        }
+                        <td class="align-middle">
+                            &#8377;@order.OrderItems.Select(n=>n.Dish.Price * n.Amount).Sum().ToString()
+                        </td>
+                       @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                        { 
+                            <td class="align-middle">@order.User.FullName</td>
+                      } 
+
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        // Add a click event listener to all buttons with IDs starting with "AcceptButton_" or "DeclineButton_"
+        document.querySelectorAll('button[id^="AcceptButton_"], button[id^="DeclineButton_"]').forEach(function (button) {
+            button.addEventListener("click", function () {
+                const orderId = button.id.split('_')[1]; // Extract the order ID
+                document.getElementById(`Status_${orderId}`).value = button.value;
+            });
+        });
+    </script>
+}

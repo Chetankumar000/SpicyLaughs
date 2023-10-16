@@ -1,0 +1,36 @@
+﻿@page
+@model PractiseProject.Pages.Orders.UsersModel
+@{
+    ViewData["Title"] = "List of all Users";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h3 class="text-center">List of all Users</h3>
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark text-center">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Users.ElementAt(0).FullName)</th>
+                        <th>@Html.DisplayNameFor(model => model.Users.ElementAt(0).UserName)</th>
+                        <th>@Html.DisplayNameFor(model => model.Users.ElementAt(0).Email)</th>
+                        <th>@Html.DisplayNameFor(model => model.Users.ElementAt(0).Role)</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var Model in Model.Users)
+                    {
+                        <tr>
+                            <td class="text-center align-middle">@Model.FullName</td>
+                            <td class="text-center align-middle">@Model.UserName</td>
+                            <td class="text-center align-middle"><a asp-page="/User/Profile" asp-route-Id="@Model.Id">@Model.Email</a></td>
+                            <td class="text-center align-middle">@Model.Role</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,113 @@
+﻿@page 
+@model SpiceyLaughs.Pages.Dishes.IndexModel
+@{
+    ViewData["Title"] = "List of Dishes";
+}
+<div class="row mx-auto">
+    <form method="get">
+        <div class="row">
+            <div class="form-group p-2 col-md-4">
+                <label asp-for="foodChoice" class="control-label pb-1"><b>Food Choice</b></label>
+                <div class="input-group">
+                    <select asp-for="foodChoice" class="form-control custom-select" asp-items="Html.GetEnumSelectList<DietaryPrefernce>()">
+                        @* <option value="@DietaryPrefernce.All_Items" default="" selected="selected">All Items</option> *@
+                    </select>
+                </div>
+                <span asp-validation-for="foodChoice" class="text-danger"></span>
+            </div>
+            <div class="form-group p-2 col-md-4">
+                <label asp-for="Cuisine" class="control-label pb-1"><b>Select Cuisine</b></label>
+                <div class="input-group">
+                    <select asp-for="Cuisine" class="form-control custom-select" asp-items="@(new SelectList(Model.Categories, "Title", "Title"))">
+                        <option value="@null" default="" selected="">All Types</option>
+                    </select>
+                </div>
+                <span asp-validation-for="Cuisine" class="text-danger"></span>
+            </div>
+            <div class="form-group p-2 col-md-4">
+                <label asp-for="Sort" class="control-label pb-1"><b>Sort By Price</b></label>
+                <div class="input-group">
+                    <select asp-for="Sort" class="form-control custom-select">
+                        <option value="@null" default="" selected="">OrderBy...</option>
+                        <option value="Ascending" >Ascending</option>
+                        <option value="Descending">Descending</option>
+                    </select>
+                </div>
+                <span asp-validation-for="Sort" class="text-danger"></span>
+            </div>
+            <div class="form-group p-2">
+                <button type="submit" class="btn btn-success">Go</button>
+                <a class="btn btn-secondary" asp-page="/Dishes/Index">Show All</a>
+            </div>
+        </div>
+    </form>
+    @foreach (var item in Model.Dishes)
+    {
+        <div class="col-md-4  border-primary mb-3 mt-2">
+            <div class="card mb-3 p-xl-3 mx-auto" style="max-width:600px; ">
+                <div class="row g-0">
+                    <div class="card-header text-white" style="background: url('https://cdn.pixabay.com/photo/2014/06/11/17/00/food-366875_1280.jpg') center/cover no-repeat;">
+                        <p class="card-text">
+                            <h5 class="card-title">
+                                @item.Title
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                                { 
+                                    <a asp-page="Edit" asp-route-id="@item.Id" class="text-white float-end"><i class="bi bi-pencil-square"></i></a>
+                                 } 
+                            </h5>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <img src="@item.ImageURL" alt="@item.ImageURL" width="100%" height="100%" style="height:400px;">
+                    </div>
+                    <div class="col-md-6 align-Models-center">
+                        <div class="card-body">
+                            <p class="card-text">@item.Description</p>
+                            <p class="card-text"><b>Cuisine: </b>@item.Category.Title</p>
+                            <p class="card-text"><b>Dietary Preference: </b>
+                                @if(item.DietaryPrefernce.Value == SpiceyLaughs.Model.DietaryPrefernce.Veg)
+                                {
+                                    <span class="badge bg-success text-white">Veg</span>
+                                }
+                                else if(item.DietaryPrefernce.Value == SpiceyLaughs.Model.DietaryPrefernce.Non_Veg)
+                                {
+                                    <span class="badge bg-danger text-white">Non-veg</span>
+                                }
+                                else{
+                                    <span class="badge bg-primary text-white">Vegan</span>
+                                  
+                                }
+                             </p>
+                            <p class="card-text">
+                                <b>Status: </b>
+                                @if (item.Available == true)
+                                {
+                                    <span class="badge bg-success text-white">AVAILABLE</span>
+                                }
+                                else 
+                                {
+                                    <span class="badge bg-danger text-white">Not Available</span>
+                                }
+                            </p>
+
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card-footer bg-white mt-3 pb-0">
+                            <p class="card-text ">
+                                <a asp-page="Details" asp-route-id="@item.Id" class="btn btn-outline-primary float-end p-md-2"><i class="bi bi-eye-fill p-1"></i>Show Details</a>
+                                <a asp-page="/Orders/AddItemToShoppingCart"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-success text-white p-2 @((item.Available == false) ? "disabled":"" )"><i class="bi bi-cart-plus p-1"></i>Add to Cart (&#8377;@item.Price?.ToString("N2"))</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+
+</div>
+
+@await Html.PartialAsync("_AddNewIconPartial", "create")

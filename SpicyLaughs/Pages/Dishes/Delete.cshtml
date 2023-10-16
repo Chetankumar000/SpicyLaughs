@@ -1,0 +1,111 @@
+﻿@page "{id:min(1)}"
+@using SpiceyLaughs.Model;
+@model SpiceyLaughs.Pages.Dishes.DeleteModel
+@{
+    ViewData["Title"] = "Delete Dish";
+}
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <p>
+            <h4>Delete Confirmation for @Model.DishDetail.Title</h4>
+        </p>
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="DishDetail.Id" hidden />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group p-2">
+                                <label asp-for="DishDetail.Title" class="control-label"></label>
+                                <input asp-for="DishDetail.Title" class="form-control" disabled />
+                                <span asp-validation-for="DishDetail.Title" class="text-danger"></span>
+                            </div>
+
+
+                            <div class="form-group p-2">
+                                <label asp-for="DishDetail.SpiceLevel" class="control-label"></label>
+                                <select disabled asp-for="DishDetail.SpiceLevel" class="form-control" asp-items="Html.GetEnumSelectList<SpiceLevel>()"><option value="" default="" selected="">Select a Spice Level</option> </select>
+                                <span asp-validation-for="DishDetail.SpiceLevel" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group p-2">
+                                <label asp-for="DishDetail.Time" class="control-label"></label>
+                                <input disabled asp-for="DishDetail.Time" type="number" class="form-control" />
+                                <span asp-validation-for="DishDetail.Time" class="text-danger"></span>
+                            </div>
+                            <div class="form-group p-2">
+                                <label asp-for="DishDetail.ImageURL" class="control-label"></label>
+                                <input disabled asp-for="DishDetail.ImageURL" type="text" class="form-control" />
+                                <span asp-validation-for="DishDetail.ImageURL" class="text-danger"></span>
+                            </div>
+                            <div class="form-group p-2">
+                                <label asp-for="DishDetail.Available" class="control-label pe-2">Available : </label>
+                                <input disabled asp-for="DishDetail.Available" />
+                                <span asp-validation-for="DishDetail.Available" class="text-danger"></span>
+                            </div>
+
+
+
+                            @* <div class="checkbox">
+                            <label>@Html.DisplayNameFor(m => m.DishDetail.Available)<input class="ps-2" type="checkbox" name="Available" value="true" checked /></label>
+                            </div> *@
+
+                        </div>
+                        <div class="col-md-6 p-2">
+                            <div class="form-group">
+                                <label asp-for="DishDetail.Price" class="control-label"></label>
+                                <input disabled asp-for="DishDetail.Price" type="number" class="form-control" />
+                                <span asp-validation-for="DishDetail.Price" class="text-danger"></span>
+                            </div>
+                            <div class="form-group p-2">
+                                <label asp-for="DishDetail.Calories" class="control-label"></label>
+                                <input disabled asp-for="DishDetail.Calories" type="number" class="form-control" />
+                                <span asp-validation-for="DishDetail.Calories" class="text-danger"></span>
+                            </div>
+                            <div class="form-group p-2">
+                                <label asp-for="DishDetail.DietaryPrefernce" class="control-label"></label>
+                                <select disabled asp-for="DishDetail.DietaryPrefernce" class="form-control" asp-items="Html.GetEnumSelectList<DietaryPrefernce>()"><option value="" default="" selected="">Select a DietaryPreference</option></select>
+                                <span asp-validation-for="DishDetail.DietaryPrefernce" class="text-danger"></span>
+                            </div>
+                            <div class="form-group p-2">
+                                <label asp-for="DishDetail.CategoryId" class="control-label"></label>
+                                <select disabled asp-for="DishDetail.CategoryId" class="form-control" asp-items="@(new SelectList(Model.Categories, "Id", "Title"))"><option value="" default="" selected="">Select a Category</option></select>
+                                <span asp-validation-for="DishDetail.CategoryId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group p-2">
+                                <label asp-for="DishDetail.Description" class="control-label"></label>
+                                <textarea disabled asp-for="DishDetail.Description" class="form-control"><</textarea>
+                                <span asp-validation-for="DishDetail.Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 offset-4 text-center mt-2">
+                        <img width="100%" id="ImageUrlPreview" />
+                    </div>
+
+                    <div class="form-group p-2">
+                        <input type="submit" class="btn btn-danger float-end" value="Delete" />
+                        <a class="btn btn-outline-secondary" asp-page="/Dishes/Index">Back To Dishes</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var output = document.getElementById('ImageUrlPreview');
+            output.src = $('#DishDetail_ImageURL').val();
+        })
+        $("#DishDetail_ImageURL").on("change", function () {
+            var output = document.getElementById("ImageUrlPreview")
+            output.src = $(this).val();
+        })
+    </script>
+}
+

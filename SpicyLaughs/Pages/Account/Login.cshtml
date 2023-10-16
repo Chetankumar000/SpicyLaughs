@@ -1,0 +1,56 @@
+﻿@page
+@model SpiceyLaughs.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Log In";
+}
+
+<style>
+    body{
+        background-color:lightgrey;
+    }
+    </style>
+
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card border shadow-lg">
+                    <div class="card-header text-white text-center py-3" style="background:url('https://cdn.pixabay.com/photo/2014/06/11/17/00/food-366875_1280.jpg') center/cover no-repeat;">
+                        <h4 class="mb-0">Log In To Your Account</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger">
+                                <strong>Sorry!</strong> - @TempData["Error"]
+                            </div>
+                        }
+
+                        <form method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="mb-3 form-group">
+                                <label asp-for="Email" class="form-label">Email</label>
+                                <input asp-for="Email" type="email" id="Email" name="Email" class="form-control">
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+
+                        <div class="mb-3 form-group">
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <input asp-for="Password" type="password"  class="form-control">
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+                            <div class="d-grid gap-3 col-md-4 offset-4">
+                                <button type="submit" class="btn btn-success btn-md rounded-pill">Log In</button>
+                                <a class="btn btn-secondary btn-md rounded-pill" asp-page="/Dishes/Index">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

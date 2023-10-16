@@ -1,0 +1,91 @@
+﻿@page "{id:min(1)}"
+@model SpiceyLaughs.Pages.Dishes.DetailsModel
+@{
+    ViewData["Title"] = Model.DishDetail.Title;
+}
+
+<div class="row mx-auto">
+    <div class="col-md-8 offset-2">
+        <div class="card mt-5 mb-3 p-xl-3 mx-auto" style="max-width:1000px">
+            <div class="row g-0">
+                <div class="col-md-12" style="background: url('https://cdn.pixabay.com/photo/2014/06/11/17/00/food-366875_1280.jpg') center/cover no-repeat;">
+                    <div class="card-header text-white" style="background:url('https://cdn.pixabay.com/photo/2014/06/11/17/00/food-366875_1280.jpg') center/cover no-repeat;">
+                        <p class="card-text">
+                            <h5 class="card-title">
+                                @Model.DishDetail.Title
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                                {
+                                    <a asp-page="Edit" asp-route-id="@Model.Id" class="text-white float"><i class="bi bi-pencil-square" style="font-size:1.5rem;"></i></a>
+                                <a asp-page="Delete" asp-route-id="@Model.Id" class="text-danger float-end"><i class="bi bi-trash" style="font-size:1.5rem;"></i></a>
+
+                                } 
+                            </h5>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <img src="@Model.DishDetail.ImageURL" alt="@Model.DishDetail.Title" width="100%" height="100%" style="min-height:600px">
+                </div>
+                <div class="col-md-7 align-Models-center">
+                    <div class="card-body">
+                        <p class="card-text">@Model.DishDetail.Description</p>
+                        <p class="card-text">
+                            <b>Cuisine: </b><a asp-page="/Categories/Details" asp-route-id="@Model.DishDetail.Category.Id">
+                                @Model.DishDetail.Category.Title
+                            </a>
+                        </p>
+                        <p class="card-text">
+                            <b>Calories: </b>
+                                @Model.DishDetail.Calories Cal
+                        </p>
+                        <p class="card-text">
+                            <b>Spice Level: </b>
+                            @Model.DishDetail.SpiceLevel 
+                        </p>
+                        <p class="card-text">
+                            <b>Preparation Time: </b>
+                            @Model.DishDetail.Time min
+                        </p>
+
+                        <p class="card-text">
+                            <b>Dietary Preference: </b>
+                            @if (Model.DishDetail.DietaryPrefernce.Value == SpiceyLaughs.Model.DietaryPrefernce.Veg)
+                            {
+                                <span class="badge bg-success text-white">Veg</span>
+                            }
+                            else if (Model.DishDetail.DietaryPrefernce.Value == SpiceyLaughs.Model.DietaryPrefernce.Non_Veg)
+                            {
+                                <span class="badge bg-danger text-white">Non-veg</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-blue text-white">Vegan</span>
+                            }
+                        </p>
+                        <p class="card-text">
+                            <b>Status: </b>
+                            @if (Model.DishDetail.Available == true)
+                            {
+                                <span class="badge bg-success text-white">AVAILABLE</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger text-white">Not Available</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card-footer bg-white mt-3 pb-0">
+                        <p class="card-text ">
+                            <a asp-page="/Dishes/index" class="btn btn-outline-primary float-end p-md-2"><i class="bi bi-eye-fill p-1"></i>Back To List</a>
+                            <a asp-page="/Orders/AddItemToShoppingCart" asp-route-id="@Model.DishDetail.Id" class="btn btn-success text-white p-2 @((Model.DishDetail.Available == false) ? "disabled":"" )"><i class="bi bi-cart-plus p-1"></i>Add to Cart (&#8377;@Model.DishDetail.Price?.ToString("N2"))</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,53 @@
+﻿
+@inject UserManager<ApplicationUser> userManager;
+@if (!User.Identity.IsAuthenticated)
+{
+    <div class="p-2">
+        <a class="btn btn-outline-primary my-2 my-sm-0 text-white" asp-page="/Account/Register"><i class="bi bi-person-plus pe-2"></i>Register</a>
+    </div>
+    <div class="p-2 pe-4">
+        <a class="btn btn-outline-success my-2 my-sm-0 text-white" asp-page="/Account/Login"><i class="bi bi-box-arrow-in-right pe-2"></i>Log In</a>
+    </div>
+}
+else
+{
+    <div class="dropdown p-2">
+        <button class="btn btn-outline-success dropdown-toggle text-white" type="button" id="profile-btn" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-badge pe-2"></i>Hello @userManager.GetUserName(User)
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="profile-btn">
+            <li>
+                <a class="dropdown-item" asp-page="/User/Profile">
+                    <i class="bi bi-person pe-2"></i>Profile
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" asp-page="/Orders/ListOrders">
+                    <i class="bi bi-list pe-2"></i>Orders
+                </a>
+            </li>
+            
+            
+                @if (User.IsInRole("admin"))
+                {
+                <li>
+                    <a class="dropdown-item" asp-page="/Orders/Users">
+                        <i class="bi bi-people pe-2"></i>Users
+                    </a>
+                </li>
+                }
+                
+        </ul>
+    </div>
+    <div class="p-2">
+        <form method="post">
+            <button class="btn btn-outline-danger my-2 my-sm-0 text-white" asp-page="/Account/Logout"><i class="bi bi-box-arrow-in-right pe-2"></i>Log Out</button>
+        </form>
+
+    </div>
+}
+
+
+
+
+
