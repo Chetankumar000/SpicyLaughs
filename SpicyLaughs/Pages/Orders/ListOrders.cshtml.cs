@@ -24,8 +24,10 @@ namespace SpiceyLaughs.Pages.Orders
         public long Last24Orders { get; set; }
         [BindProperty]
         public double? Total24Sales { get; set; }
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
         public string? Status { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string? Payment { get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -37,7 +39,11 @@ namespace SpiceyLaughs.Pages.Orders
             Total24Sales = _orderService.GetLast24HoursTotalOrdersCollection();
             if(Status != null)
             {
-                Orders.Where(n=>n.Status == Status);
+                Orders = Orders.Where(n=>n.Status == Status).ToList();
+            }
+            if(Payment != null)
+            {
+                Orders = Orders.Where(n=>n.Payment == Payment).ToList();
             }
 
             return Page();

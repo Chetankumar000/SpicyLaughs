@@ -1,35 +1,70 @@
 ﻿@page
 @model SpiceyLaughs.Pages.Orders.ListOrdersModel
 @{
+    ViewData["Title"] = "List of Orders";
 }
 
 <div class="row">
     <div class="col-md-10 offset-1">
-        <p>
-            <h3>List of All your Orders</h3>
-            <h5 class="float-end">Total Orders : @Model.OrderCount</h5>
-            <h5 class="float-end pe-4">Total Sales: &#8377;@Model.TotalSales</h5>
-            <h5 class="float-end pe-4">Total Sales(Last 24)</>: &#8377;@Model.Total24Sales</h5>
-            <h5 class="float-end pe-4">Total Orders(Last 24): @Model.Last24Orders</h5>
+        <h3 class="pt-2">List of All your Orders</h3>
+        <div class="container mt-4">
+            
+
+            @if (User.IsInRole("admin"))
+            {
+                <div class="row pt-1">
+                    <div class="col-md-3">
+                        <h5 class="float-end">Total Orders: @Model.OrderCount</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="float-end pe-4">Total Sales: &#8377;@Model.TotalSales</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="float-end pe-4">Total Sales (Last 24): &#8377;@Model.Total24Sales</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="float-end pe-4">Total Orders (Last 24): @Model.Last24Orders</h5>
+                    </div>
+                </div>
+          
+
             <form>
-            <div class="form-group p-2 col-md-2">
-                <label asp-for="Status" class="control-label pb-1"><b>Select Status</b></label>
-                <div class="input-group">
-                    <select asp-for="Status" class="form-control custom-select">
-                        <option value="@null" default="" selected="">All Types</option>
-                            <option value="Pending" default="" >Pending</option>
-                            <option value="Accepted" default="">Accepted</option>
-                            <option value="Declined" default="">Declined</option>
-                    </select>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group p-2">
+                            <label asp-for="Status" class="control-label pb-1"><b>Select Status</b></label>
+                            <select asp-for="Status" class="form-select">
+                                <option value="@null" default="" selected="">All Types</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="Declined">Declined</option>
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group p-2">
+                            <label asp-for="Payment" class="control-label pb-1"><b>Select Payment Type</b></label>
+                            <select asp-for="Payment" class="form-select">
+                                <option value="@null" default="" selected="">All Types</option>
+                                <option value="COD">COD</option>
+                                <option value="Online">Online</option>
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 pt-4">
+                        <div class="form-group p-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-success">Go</button>
+                            <a class="btn btn-secondary ms-2" asp-page="/Orders/ListOrders">Show All</a>
+                        </div>
+                    </div>
                 </div>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-                <div class="form-group p-2">
-                    <button type="submit" class="btn btn-success">Go</button>
-                    <a class="btn btn-secondary" asp-page="/Orders/ListOrders">Show All</a>
-                </div>
-            </form> 
-        </p>
+            </form>
+            }
+        </div>
+
+
         <table class="table">
             <thead>
                 <tr>
